@@ -1,0 +1,6 @@
+version: '3.7'
+services:
+  new-token:
+    build:
+      context: .
+    env_file: .env

@@ -5,6 +5,13 @@ by [timdorr](https://tesla-api.timdorr.com/api-basics/authentication).
 
 # How To Use
 
+## Docker
+
+1. Copy the example dotenv and replace `change_me` with real values: `cp .env.example .env`
+2. `docker-compose run --rm new-token`
+
+## Local
+
 ⚠️  Make sure that you have Ruby installed on your machine before continuing. ⚠️
 
 1. Copy the example dotenv and replace `change_me` with real values: `cp .env.example .env`
