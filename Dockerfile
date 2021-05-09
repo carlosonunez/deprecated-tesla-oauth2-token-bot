@@ -1,4 +1,4 @@
-FROM ruby:alpine
+FROM ruby
 COPY . /app
 WORKDIR /app
 RUN bundle install --without test
