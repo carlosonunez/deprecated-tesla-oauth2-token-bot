@@ -1,5 +1,6 @@
 FROM ruby
+COPY ./Gemfile .
+RUN bundle install --without test
 COPY . /app
 WORKDIR /app
-RUN bundle install --without test
 ENTRYPOINT [ "ruby", "generate_token.rb" ]

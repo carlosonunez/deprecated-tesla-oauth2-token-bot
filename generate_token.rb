@@ -3,6 +3,7 @@
 require 'digest'
 require 'dotenv'
 require 'httparty'
+require 'mail'
 require 'securerandom'
 
 TESLA_AUTH_URL = 'https://auth.tesla.com/oauth2/v3'
@@ -12,6 +13,17 @@ TESLA_OWNERS_API_AUTH_URL = 'https://owner-api.teslamotors.com/oauth/token'
 TESLA_CLIENT_ID = '81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796384'
 TESLA_CLIENT_SECRET = 'c7257eb71a564034f9419ee651c7d0e5f7aa6bfbd18bafb5c5c033b093bb2fa3'
 TESLA_API_CODE_VERIFIER_LENGTH_CHARS = 86
+
+def configure_mailer
+  Mail.defaults do
+    delivery_method :smtp, { address: ENV['SMTP_HOST'],
+      port: ENV['SMTP_PORT'],
+      user_name: ENV['SMTP_USERNAME'],
+      password: ENV['SMTP_PASSWORD'],
+      authentication: 'plain',
+      enable_starttls_auto: true }
+  end
+end
 
 def generate_challenge
   verifier = SecureRandom.hex(TESLA_API_CODE_VERIFIER_LENGTH_CHARS / 2)
@@ -24,7 +36,9 @@ def generate_state
 end
 
 def fail_if_missing_required_env_vars!
-  %w[TESLA_USERNAME TESLA_PASSWORD].each do |var|
+  %w[TESLA_USERNAME TESLA_PASSWORD
+     MAIL_FROM MAIL_TO
+     SMTP_HOST SMTP_PORT SMTP_USERNAME SMTP_PASSWORD].each do |var|
     raise "Please define #{var}" if ENV[var].nil?
   end
 end
@@ -119,6 +133,7 @@ end
 
 Dotenv.load('.env') if File.exist? '.env'
 fail_if_missing_required_env_vars!
+configure_mailer
 
 state = generate_state
 code_verifier, challenge = generate_challenge
@@ -149,6 +164,20 @@ raise "Couldn't get access token" if access_token.nil?
 
 expiration_days = (expiration_seconds / 60 / 60 / 24)
 
-puts "Access token: #{access_token}"
-puts "Refresh token: #{refresh_token}"
-puts "Expires in: #{expiration_days} days"
+message = <<-MSG
+The access token for your access to the Tesla API has been refreshed for \
+#{ENV['TESLA_USERNAME']}.
+
+Access token: #{access_token}
+Expires in: #{expiration_days} days
+
+Powered by https://github.com/carlosonunez/tesla-oauth2-token-bot
+MSG
+puts "DEBUG: Sending mail now..."
+Mail.deliver do
+  from ENV['MAIL_FROM']
+  to ENV['MAIL_TO']
+  subject "INFO: Your Tesla API token has been refreshed."
+  body message
+end
+puts "INFO: mailer sent"
