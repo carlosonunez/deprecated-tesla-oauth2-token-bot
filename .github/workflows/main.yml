@@ -1,0 +1,27 @@
+---
+name: Fetch new token
+on:
+  push:
+    branches:
+      - main
+  schedule:
+  - cron: "* * */44 * *"
+jobs:
+  fetch_token:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install Docker Compose
+        run: curl -L ${DOCKER_COMPOSE_URL}/docker-compose-`uname -s`-`uname -m` > ./docker-compose &&
+             chmod +x ./docker-compose
+        env:
+          DOCKER_COMPOSE_URL: https://github.com/docker/compose/releases/download/1.29.0
+
+      - name: Decrypt environment file
+        run: ./docker-compose -f docker-compose.ci.yml run --rm decrypt-env
+        env:
+          ENV_PASSWORD: ${{ secrets.env_file_encryption_key }}
+
+      - name: Fetch token
+        run: ./docker-compose run --rm new-token

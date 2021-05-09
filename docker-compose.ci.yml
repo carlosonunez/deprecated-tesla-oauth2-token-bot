@@ -1,0 +1,25 @@
+version: '2.2'
+services:
+  gpg:
+    image: vladgh/gpg
+    volumes:
+      - $PWD:/app
+    working_dir: /app
+  encrypt-env:
+    extends: gpg
+    command:
+      - --batch
+      - --yes
+      - --passphrase=$ENV_PASSWORD
+      - --output=env.gpg
+      - --symmetric
+      - .env
+  decrypt-env:
+    extends: gpg
+    command:
+      - '--decrypt'
+      - '--batch'
+      - "--passphrase=$ENV_PASSWORD"
+      - '--output=.env'
+      - env.gpg
+
