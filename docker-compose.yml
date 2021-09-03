@@ -4,3 +4,16 @@ services:
     build:
       context: .
     env_file: .env
+  unit:
+    build:
+      context: .
+      args:
+        WITH_TEST: "true"
+    environment:
+      LOAD_PATH: "/app/spec/unit;/app/spec;/app/lib" 
+    entrypoint: rspec
+    volumes:
+      - $PWD:/app
+    working_dir: /app
+    command:
+      - --fail-fast
