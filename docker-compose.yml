@@ -17,3 +17,5 @@ services:
     working_dir: /app
     command:
       - --fail-fast
+      - --format
+      - documentation
