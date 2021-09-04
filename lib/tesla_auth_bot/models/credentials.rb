@@ -7,10 +7,15 @@ module TeslaAuthBot
   module Models
     # This describes an authentication object containing access and refresh tokens.
     class Credentials
+      attr_reader :authorize_url, :oauth_redirect_url
+
       VERIFIER_LENGTH = 86 # This is required by the Tesla API
       STATE_LENGTH = 16 # This is arbitrary and can be set to anything.
 
-      def initialize; end
+      def initialize
+        @authorize_url = 'https://auth.tesla.com/oauth2/v3/authorize'
+        @oauth_redirect_url = 'https://auth.tesla.com/void/callback'
+      end
 
       def verifier
         charset = ('A'..'Z').to_a + ('a'..'z').to_a + (1..9).to_a
