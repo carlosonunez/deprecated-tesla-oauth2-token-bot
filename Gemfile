@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 gem 'dotenv'
 gem 'httparty'
 gem 'mail'
+gem 'nokogiri'
 group :test do
   gem 'pry'
   gem 'rspec'
