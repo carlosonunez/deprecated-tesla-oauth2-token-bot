@@ -1,4 +1,4 @@
-# Tesla Auth Bot
+# Tesla Auth Bot [DEPRECATED]
 
 > ❌ **THIS PROJECT HAS BEEN DEPRECATED** ❌
 >
