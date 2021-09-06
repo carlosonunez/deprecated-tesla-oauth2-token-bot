@@ -1,9 +1,9 @@
 # Tesla Auth Bot
 
-❌ **THIS PROJECT HAS BEEN DEPRECATED** ❌
-
-> Tesla's Auth API has enabled reCAPTCHA on /oauth2/v3/authorize and
-> /oauth2/v1/authorize. Moreover, Tesla provides the code in a `Location`
+> ❌ **THIS PROJECT HAS BEEN DEPRECATED** ❌
+>
+> Tesla's Auth API has enabled reCAPTCHA on `/oauth2/v3/authorize` and
+> `/oauth2/v1/authorize`. Moreover, Tesla provides the code in a `Location`
 > header, which browsers will redirect to automatically. Tesla will
 > present a 404 page upon doing this. Consequently, the only way to
 > work around this is to use a webdriver and capture redirects, which is
